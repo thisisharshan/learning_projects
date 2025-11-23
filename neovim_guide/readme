@@ -1,0 +1,8 @@
+This config was designed by me and coded by claude AI
+replace or create the init.lua directory in ~/.config/nvim folder
+That's it do nvim on your terminal
+A installing screen should run now
+when complete do :qa
+do nvim again
+
+Congrats!
