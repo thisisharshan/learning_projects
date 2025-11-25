@@ -1,5 +1,5 @@
 ---
-id: Guide
+id: recipe
 aliases: []
 tags: []
 ---
