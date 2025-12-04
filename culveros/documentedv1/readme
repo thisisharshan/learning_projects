@@ -1,0 +1,256 @@
+Culver OS – Alpha Edition
+
+Culver OS – Alpha Edition is a customization guide and config snapshot that turns a 10–15‑year‑old government‑issued HP laptop into a minimal, distraction‑free coding and browsing machine. It is not a new Linux distro; it is a documented way to rebuild the same environment on similar low‑spec hardware (2 GB RAM, 32‑bit).
+1. Target hardware
+
+Reference machine
+
+    Model: HP 14" government‑issued education laptop (circa 2010–2015)
+
+    CPU: 32‑bit Pentium‑class processor (exact model not required)
+
+    RAM: 2 GB
+
+    Storage: 256 GB SSD (replaced the original HDD)
+
+    GPU: integrated graphics (Intel)
+
+    Input: basic keyboard, touchpad (configured for two‑finger scrolling and two‑finger right‑click)
+
+All steps are written against this machine as a case study; they should work on similar 32‑bit laptops.
+2. Base install
+2.1. OS image
+
+    Distribution: Lubuntu 18.04 32‑bit (LXDE desktop, chosen because newer Ubuntu LTS dropped 32‑bit ISOs)
+
+    ISO was downloaded from official Lubuntu mirrors (version 18.04.x, 32‑bit).
+
+2.2. Writing the USB
+
+    On another machine, install balenaEtcher.
+
+    Insert a USB stick (4 GB+ is enough).
+
+    In Etcher:
+
+        Select the Lubuntu 18.04 32‑bit ISO.
+
+        Select the USB device.
+
+        Click “Flash”.
+
+    Etcher completely wipes the USB and writes the image.
+
+2.3. Installing on the HP laptop
+
+    Boot from the USB (F9/F12/ESC depending on BIOS).
+
+    Choose “Install Lubuntu”.
+
+    Partitioning:
+
+        Use “Erase disk and install Lubuntu” to keep things simple.
+
+        Install bootloader to the default disk (the 256 GB SSD).
+
+    Follow installer defaults for timezone, username, and password.
+
+    Reboot and remove the USB when prompted.
+
+3. First boot and system basics
+
+After first boot:
+
+bash
+sudo apt update
+sudo apt upgrade
+
+This pulls in security updates while staying on the 18.04 base.
+
+No extra desktop environments were installed. The system remains LXDE with Openbox as its window manager.
+4. Desktop look and feel
+
+The philosophy is “simple, readable, and light”.
+4.1. LXDE defaults kept
+
+Out of the box, Lubuntu 18.04 LXDE provides:
+
+    A single panel at the top with:
+
+        Main menu
+
+        Window list
+
+        System tray
+
+        Clock
+
+    PCManFM managing the desktop icons.
+
+Culver OS Alpha keeps this structure. The only visual changes are:
+
+    Wallpaper set to a clean mountain/gradient image.
+
+    Panel kept minimal: default applets, no extra clutter.
+
+No heavy theming engines or extra configuration centers were used; most LXQt stuff was deliberately avoided due to crashes on this specific OS version.
+5. Application set
+
+Culver OS Alpha focuses on a minimal but usable student toolkit:
+
+    Browser: Firefox (default from Lubuntu).
+
+    Editor/IDE: Geany (lightweight IDE, installed via APT).
+
+    System utilities: file manager, terminal, and basic tools from Lubuntu.
+
+No Neovim, no RetroArch, and no heavy development stacks are treated as “core” in this alpha.
+5.1. Geany for beginners
+
+Geany is used mostly with its default settings to keep the learning curve low:
+
+    Out‑of‑the‑box build commands for C/C++ and other languages are left unchanged.
+
+    No plugins or deep customization.
+
+On first run, recommended simple tweaks (optional, but consistent with the environment):
+
+    Enable line numbers: View → Show Line Numbers.
+
+    Enable auto‑save before running: Edit → Preferences → Files → Save before executing (if desired).
+
+    Set indentation to 4 spaces: Edit → Preferences → Editor → Indentation.
+
+This means a new programmer can:
+
+    Create a main.c or main.cpp.
+
+    Press “Compile” and then “Execute” from the toolbar, using Geany’s defaults.
+
+    See output in a terminal without needing to understand build systems.
+
+6. Launcher and keyboard shortcuts
+
+The main “Culver” personality comes from the central launcher and a small set of shortcuts.
+6.1. Rofi as the app launcher
+
+Rofi is used to give a modern, floating launcher similar to KRunner.
+
+Install:
+
+bash
+sudo apt install rofi
+
+Test from a terminal:
+
+bash
+rofi -show drun
+
+This opens the application launcher with installed .desktop entries.
+6.2. Shortcut management via lxhotkey
+
+On this system lxhotkey is available and used instead of the LXQt configuration tools (which segfaulted). lxhotkey provides a GUI to map global key combinations.
+
+Key bindings actually used in Culver OS Alpha:
+
+    Super + S → rofi -show drun
+
+    Super + Esc → open the main start/menu (LXDE menu)
+
+    Workspace and window movement shortcuts: existing LXDE defaults shown in lxhotkey (Ctrl+Alt+Arrow, Super+F1–F4, etc.) are left as‑is.
+
+Configuration steps for the Rofi binding:
+
+    Launch lxhotkey (via the menu or by running lxhotkey in a terminal).
+
+    Go to the Programs tab.
+
+    Click Add:
+
+        Command: rofi -show drun
+
+        Hotkey: press Super + S
+
+    Apply and close.
+
+Result: pressing Super+S anywhere shows the centered Rofi launcher over the current window, giving a “mini custom OS” feel.
+7. Input and trackpad adjustments
+
+The laptop’s touchpad is tuned to feel more “modern”:
+
+    Two‑finger scrolling is enabled.
+
+    Two‑finger tap or gesture is mapped to right‑click popup (instead of physical button only).
+
+These are done using the standard Lubuntu input settings and libinput defaults, not via any custom daemon:
+
+    Enable two‑finger scrolling in the Mouse/Touchpad settings GUI (LXDE).
+
+    Ensure tap‑to‑click and two‑finger tap → right click are turned on if supported by the hardware.
+
+The goal is to make the old laptop feel closer to a modern touchpad experience with minimal configuration.
+8. What is deliberately not included (Alpha constraints)
+
+To keep the base stable and documentable, some ideas were explored but are not part of Culver OS Alpha:
+
+    No LXQt configuration center (lxqt-config), because on this OS version it crashed with “segmentation fault (core dumped)” during testing.
+
+    No third‑party hotkey daemons (like sxhkd) in the alpha snapshot, even though they were investigated as options.
+
+    No Neovim, plugin managers, or advanced terminal workflows.
+
+    No RetroArch or game cores; gaming is out of scope for this first release.
+
+This keeps the repo focused on something a beginner or student can re‑create without debugging obscure crashes.
+9. Reproducing Culver OS Alpha on another machine
+
+This repository documents the recipe, not a custom ISO. To rebuild it:
+
+    Find a 32‑bit (or low‑spec) laptop with at least 2 GB RAM and a disk you can erase.
+
+    Download Lubuntu 18.04 32‑bit ISO.
+
+    Flash it to a USB with balenaEtcher.
+
+    Boot and install using “Erase disk and install Lubuntu”.
+
+    After first boot:
+
+        sudo apt update && sudo apt upgrade
+
+        sudo apt install rofi geany
+
+    Configure:
+
+        Set wallpaper to a calm, minimal image.
+
+        Use lxhotkey to bind:
+
+            Super+S → rofi -show drun
+
+            Super+Esc → main menu (if not already bound).
+
+        Optionally tweak Geany preferences (line numbers, indentation).
+
+        Enable two‑finger scroll and two‑finger right‑click in mouse settings if supported.
+
+At this point the system should look and behave like the screenshots in the repo: a light LXDE desktop, a centered Rofi launcher on Super+S, and Geany ready for beginner programming.
+10. Future work (beyond Alpha)
+
+The Alpha edition is intentionally simple. Future branches/tags can document:
+
+    A “Dev” edition with:
+
+        Neovim plus a minimal init.vim and C++/Python helpers.
+
+        Better tiling/window management shortcuts (possibly with sxhkd).
+
+    A “Student Lab” edition with:
+
+        Office suite (LibreOffice) and PDF tools.
+
+        More polished theming (dark GTK theme and Papirus icons).
+
+    A “Retro” edition with RetroArch, curated cores, and ROM directory structure (for legal backups).
+
+Each of these should stay faithful to the same principles: 2 GB friendly, documented step‑by‑step, and reproducible without deep Linux knowledge.
