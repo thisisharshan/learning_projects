@@ -8,4 +8,3 @@ if say == "add":
 
 else:
     print("what the hell are you even trying to say bro?")
-
